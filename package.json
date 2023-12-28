@@ -1,0 +1,16 @@
+{
+  "name": "upsapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "express": "^4.16.1",
+    "winston": "^3.3.3"
+  }
+}
