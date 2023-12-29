@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
             if (err) throw err;
           }
         });
-        res.status(200).json(JSON.stringify(output));
+        res.status(200).json(output);
       }
     })
   } catch (error) {
