@@ -30,7 +30,7 @@ const exec = require('child_process').exec;
 const app = express();
 app.get('/', (req, res) => {
 
-  var wanted = ['upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge'];
+  var wanted = ['date','upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
   try {
     executeCmd('apcaccess', function (err, response) {
       var output = {};
