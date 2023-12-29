@@ -5,7 +5,7 @@ module.exports = {
     watch: '.',
     env_production: {
       NODE_ENV: "production",
-      PORT: 8080
+      PORT: 8070
    },
    env_development: {
       NODE_ENV: "development",
@@ -15,13 +15,13 @@ module.exports = {
 
   deploy : {
     production : {
-      user : 'SSH_USERNAME',
-      host : 'SSH_HOSTMACHINE',
+      user : 'pi',
+      host : '127.0.0.1',
       ref  : 'origin/main',
       repo : 'https://github.com/neerpatel/upsapi',
       path : '/var/node/upsapi',
       'pre-deploy-local': '',
-      'post-deploy' : 'pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'pm2 startOrRestart ecosystem.config.js --env production',
       'pre-setup': 'npm install'
     }
   }
