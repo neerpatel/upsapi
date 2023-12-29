@@ -11,6 +11,6 @@
   "dependencies": {
     "app-root-path": "^3.0.0",
     "express": "^4.16.1",
-    "winston": "^3.3.3"
+    "winston": "^3.11.0"
   }
 }
