@@ -69,5 +69,5 @@ app.get('/', (req, res) => {
 
 });
 
-const port = process.env.PORT || PORT;
+const port = process.env.PORT || 8070;
 app.listen(port, () => logger.info(`Server running on port ${port}`));
