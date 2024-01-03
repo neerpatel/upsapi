@@ -30,7 +30,7 @@ module.exports = {
       repo : 'https://github.com/neerpatel/upsapi',
       path : '/opt/upsapi',
       'pre-deploy-local': '',
-      'post-deploy': 'npm install'
+      'post-deploy': 'cd .\app\ && npm install'
     }
   }
 };
