@@ -43,15 +43,15 @@ function query(ip, port, callback) {
         // loop over every line
         lines.forEach(function (line) {
             if (line.trim() != '' && line.includes(':')) {
-            var lineData = [];
-            // assign values
-            lineData = line.split(': ');
-            
-            var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-            var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-        
-            response[label] = value;
-        
+                var lineData = [];
+                // assign values
+                lineData = line.split(': ');
+
+                var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+
+                response[label] = value;
+
             };
         });
         callback(null, response);
@@ -93,12 +93,14 @@ router.get("/apcaccess", (req, res) => {
                 var lines = response.trim().split("\n");
                 // loop over every line
                 lines.forEach(function (line) {
-                    var lineData = [];
+                    if (line.trim() != '' && line.includes(':')) {
+                        var lineData = [];
 
-                    lineData = line.split(' : ');
-                    var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                    var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                    output[label] = value;
+                        lineData = line.split(' : ');
+                        var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                        var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                        output[label] = value;
+                    }
 
                 });
                 res.status(200).json(output);
@@ -111,4 +113,4 @@ router.get("/apcaccess", (req, res) => {
 
 });
 
-module.exports = {router, query};
+module.exports = { router, query };

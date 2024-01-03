@@ -2,7 +2,7 @@
 
 const express = require('express');
 const logger = require("./config/winston");
-const {router: ups} = require("./api/ups");
+const { router: ups } = require("./api/ups");
 const hubitat = require("./api/hubitat");
 const bodyParser = require("body-parser");
 
@@ -13,13 +13,22 @@ const app = express();
 
 app.use(
     bodyParser.urlencoded({
-      extended: false,
+        extended: false,
     })
-  );
-  
+);
+
 app.use(bodyParser.json());
 
 app.use("/ups", ups);
-app.use("/hubitat", ups);
+app.use("/hubitat", hubitat);
 const port = process.env.PORT || 8070;
 app.listen(port, () => logger.info(`Server running on port ${port}`));
+
+process.on('SIGTERM', () => {
+    logger.info('SIGTERM signal received.');
+    logger.info('Closing http server.');
+    server.close((err) => {
+        logger.info('Http server closed.');
+        process.exit(err ? 1 : 0);
+    });
+});
