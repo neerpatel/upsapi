@@ -88,9 +88,10 @@ router.get("/status", (req, res) => {
 });
 
 router.get("/apcaccess", (req, res) => {
-
+    
     var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
+        res.header("Referer", "apcupsd");
         executeCmd('apcaccess', function (err, response) {
             var output = {};
             if (err) {
