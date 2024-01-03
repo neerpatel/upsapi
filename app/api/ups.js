@@ -45,22 +45,13 @@ function query(ip, port, callback) {
             if (line.trim() != '' && line.includes(':')) {
             var lineData = [];
             // assign values
-            var stats = line.split(': ');
+            lineData = line.split(': ');
             
-            var label = stats[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-            var value = stats[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-            //label = label.replace(/(^\s+|\s+$)/g, '');
-            //value = value.replace(/(^\s+|\s+$)/g, '');
-
+            var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+            var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+        
             response[label] = value;
-         
-            /*for (let line of lines) {
-                
-                const rec = line.split(":");
-                if (rec[0].trim() === '') break;
-    
-                //response[rec[0].trim().toLowerCase()] = rec[1].trim();
-            }*/
+        
             };
         });
         callback(null, response);
@@ -77,7 +68,7 @@ function query(ip, port, callback) {
 
 const exec = require('child_process').exec;
 router.get("/status", (req, res) => {
-    query('192.168.0.101', 3551, function (err, response) {
+    query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
         res.header("Referer", "apcupsd");
         if (err) {
             logger.error(err);
@@ -103,21 +94,12 @@ router.get("/apcaccess", (req, res) => {
                 // loop over every line
                 lines.forEach(function (line) {
                     var lineData = [];
-                    // assign values
-                    var stats = line.split(' : ');
-                    var label = stats[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                    var value = stats[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                    output[label] = value;
-                    // remove surrounding spaces
-                    //label = label.replace(/(^\s+|\s+$)/g, '');
-                    // if found as wanted value, store it
-                    /*if (wanted.indexOf(label) > -1) {
-                        //value = value.replace(/(^\s+|\s+$)/g, '');
 
-                        output[label] = value;
-                        //output.push(lineData);
-                        if (err) throw err;
-                    }*/
+                    lineData = line.split(' : ');
+                    var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                    var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                    output[label] = value;
+
                 });
                 res.status(200).json(output);
             }
@@ -129,4 +111,4 @@ router.get("/apcaccess", (req, res) => {
 
 });
 
-module.exports = router;
+module.exports = {router, query};

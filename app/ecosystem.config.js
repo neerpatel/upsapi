@@ -5,11 +5,20 @@ module.exports = {
     watch: '.',
     env_production: {
       NODE_ENV: "production",
-      PORT: 8070
+      PORT: 80,
+      HUB_IP: "",
+      HUB_PORT: 39501,
+      APCNIS_IP: "127.0.0.1",
+      APCNIS_PORT: 3551
+
    },
    env_development: {
       NODE_ENV: "development",
-      PORT: 8070
+      PORT: 8070,
+      HUB_IP: "",
+      HUB_PORT: 39501,
+      APCNIS_IP: "127.0.0.1",
+      APCNIS_PORT: 3551
    }
   }],
 
