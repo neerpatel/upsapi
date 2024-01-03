@@ -95,11 +95,16 @@ router.get("/apcaccess", (req, res) => {
                 lines.forEach(function (line) {
                     if (line.trim() != '' && line.includes(':')) {
                         var lineData = [];
-
-                        lineData = line.split(' : ');
-                        var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                        var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                        output[label] = value;
+                        try {
+                            lineData = line.split(' : ');
+                            var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                            var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                            output[label] = value;
+                        } catch (error) {
+                            logger.error(error);
+                            logger.error(line);
+                        }
+                        
                     }
 
                 });
