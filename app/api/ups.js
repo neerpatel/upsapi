@@ -39,18 +39,25 @@ function query(ip, port, callback) {
 
     client.on('end', function () {
         const response = {};
+
         const lines = status.trim().split("\n");
         // loop over every line
         lines.forEach(function (line) {
+
             if (line.trim() != '' && line.includes(':')) {
-                var lineData = [];
-                // assign values
-                lineData = line.split(': ');
+                try {
+                    var lineData = [];
+                    // assign values
+                    lineData = line.split(': ');
 
-                var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                    var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                    var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
 
-                response[label] = value;
+                    response[label] = value;
+                } catch (error) {
+                    logger.error(error);
+                    logger.error(line);
+                }
 
             };
         });
@@ -96,7 +103,7 @@ router.get("/apcaccess", (req, res) => {
                     if (line.trim() != '' && line.includes(':')) {
                         var lineData = [];
                         try {
-                            lineData = line.split(' : ');
+                            lineData = line.split(': ');
                             var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                             var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                             output[label] = value;
@@ -104,7 +111,7 @@ router.get("/apcaccess", (req, res) => {
                             logger.error(error);
                             logger.error(line);
                         }
-                        
+
                     }
 
                 });
