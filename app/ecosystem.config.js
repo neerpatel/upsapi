@@ -29,10 +29,12 @@ module.exports = {
     ignore_watch: ["node_modules", "logs"],
     env_production: {
       NODE_ENV: "production",
+      CRON: "/5 * * * *",
       PORT: 8070,
     },
     env_development: {
       NODE_ENV: "development",
+      CRON: "/5 * * * *",
       PORT: 8070
     }
   }],
