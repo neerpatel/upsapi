@@ -33,7 +33,7 @@ function callHubitat(data, callback) {
 
 router.get("/", (req, res) => {
     var data;
-    var event;
+    var event = {};
     try {
         logger.info(`hubitat get - ${JSON.stringify(req.query['event'])}`);
         if ('event' in req.query) {
