@@ -4,14 +4,14 @@ const { query } = require("./ups");
 const router = express.Router();
 const axios = require('axios');
 
-async function callHubitat(data) {
+function callHubitat(data) {
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
     logger.info(`callHubitat url - ${url}`);
     logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
-        const response = await axios({
+        const response = axios({
             method: 'post',
             url: url,
             data: data,
@@ -29,7 +29,7 @@ async function callHubitat(data) {
     return response.data;
 }
 
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
     var data;
     var event;
     try {
@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
             }
         });
         logger.info(`hubitat get data- ${JSON.stringify(data)}`);
-        const postresponse = await callHubitat({ ...event, ...data });
+        const postresponse = callHubitat({ ...event, ...data });
         res.status(200).json(postresponse);
     } catch (error) {
         logger.error(error);
