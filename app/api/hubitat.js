@@ -38,14 +38,12 @@ router.get("/", (req, res) => {
         if ('event' in req.query) {
             event['event'] = req.query['event'];
         }
-        logger.info(`hubitat get event- ${JSON.stringify(event)}`);
         apcaccess((err, response) => {
             if (err) {
                 logger.error(err);
                 res.status(500).json(err);
             }
             else {
-                logger.info(`hubitat get data- ${JSON.stringify(response)}`);
                 callHubitat({ ...event, ...response }, (err, response) => {
                     if (err) {
                         logger.error(err);

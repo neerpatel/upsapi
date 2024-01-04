@@ -8,9 +8,9 @@ const processName = process.env.name || 'cron';
 // Only schedule cron job if it´s the primary pm2 instance
 if(processName === 'cron'){
     // schedule cron job
-    cron.schedule('5 * * * * *', () => {
+    cron.schedule('5 * * * *', async () => {
         logger.info('cron: Calling Hubitat'); 
-        const response = axios({
+        const response = await axios({
             method: 'get',
             url: `http://127.0.0.1:${process.env.PORT}/hubitat?event=cron`,
             headers: {
