@@ -28,6 +28,7 @@ function apcaccess() {
     var output = {};
     executeCmd('apcaccess', function (err, response) {
         if (err) {
+            logger.error("apcaccess : " + err);
             throw err;
         }
         else {
@@ -42,14 +43,15 @@ function apcaccess() {
                         var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                         output[label] = value;
                     } catch (error) {
-                        logger.error(error);
-                        logger.error(line);
+                        logger.error("apcaccess : " + error);
+                        logger.error("apcaccess : " + line);
                     }
                 }
             });
         }
+        return output;
     });
-    return output;
+    
 }
 
 function query(ip, port, callback) {
