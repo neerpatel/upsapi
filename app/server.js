@@ -20,12 +20,12 @@ app.use(
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    logger.info({
+    logger.info(JSON.stringify({
       method: req.method,
       url: req.url,
       statusCode: res.statusCode,
       responseTime: Date.now() - req.startTime,
-    });
+    }));
     next();
   });
 

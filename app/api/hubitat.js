@@ -28,15 +28,22 @@ async function callHubitat(data) {
     return response.data;
 }
 
-router.post("/", async (req, res) => {
+router.get("/", async (req, res) => {
     var data;
+    var event;
     try {
+        if (req('event') === '') { 
+            event = {event : req('event')};
+        }
         query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
+            res.header("Referer", "apcupsd");
             if (err) {
                 throw err;
             }
             else {
-                data = response;
+                data = { ...response, 
+                        ...event
+                };
             }
         });
         const postresponse = await callHubitat(data);
