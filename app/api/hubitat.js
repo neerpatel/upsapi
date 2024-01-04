@@ -12,19 +12,22 @@ async function callHubitat(data) {
     const postData = {
         data: data
     };
-
+    try {
     const response = await axios({
         method: 'post',
         url: url,
         data: postData,
         headers: {
-            'Content-Type': 'text/html',
+            'Content-Type': 'text/json',
             'Content-Length': JSON.stringify(postData).length,
             'Referer': 'apcupsd'
         },
         port: process.env.HUB_PORT
     });
-
+    } catch (error) {
+        logger.error("callHubitat - ${error}");
+        throw error;
+    }
     return response.data;
 }
 
