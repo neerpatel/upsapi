@@ -33,10 +33,12 @@ function callHubitat(data, callback) {
 router.get("/", (req, res) => {
     var data;
     var event = {};
-    logger.info(`/hubitat: was called by ${req.ip}`);
     try {
         if ('event' in req.query) {
             event['event'] = req.query['event'];
+            logger.info(`/hubitat: was called by ${req.ip} event = ${event['event']}`);
+        } else { 
+            logger.info(`/hubitat: was called by ${req.ip}`);
         }
         apcaccess((err, response) => {
             if (err) {
