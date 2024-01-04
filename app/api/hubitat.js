@@ -36,7 +36,7 @@ router.get("/", (req, res) => {
     var event;
     try {
         logger.info(`hubitat get - ${JSON.stringify(req.query['event'])}`);
-        if (req.query.event === '') {
+        if (!req.query['event'] === '') {
             event['event'] = req.query['event'];
         }
         logger.info(`hubitat get event- ${JSON.stringify(event)}`);
