@@ -25,7 +25,7 @@ async function callHubitat(data) {
         port: process.env.HUB_PORT
     });
     } catch (error) {
-        logger.error("callHubitat - ${error}");
+        logger.error(`callHubitat - ${error}`);
         throw error;
     }
     return response.data;
