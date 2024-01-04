@@ -1,6 +1,6 @@
 const express = require("express");
 const logger = require("../config/winston");
-const { query } = require("./ups");
+const { apcaccess } = require("./ups");
 const router = express.Router();
 const axios = require('axios');
 
@@ -37,14 +37,7 @@ router.get("/", (req, res) => {
             event = { event: req.params.event };
         }
         logger.info(`hubitat get event- ${JSON.stringify(event)}`);
-        query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
-            if (err) {
-                throw err;
-            }
-            else {
-                data = response;
-            }
-        });
+        data = apcaccess();
         logger.info(`hubitat get data- ${JSON.stringify(data)}`);
         const postresponse = callHubitat({ ...event, ...data });
         res.status(200).json(postresponse);

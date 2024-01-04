@@ -24,6 +24,34 @@ function executeCmd(cmd, callback) {
     });
 }
 
+function apcaccess() {
+    var output = {};
+    executeCmd('apcaccess', function (err, response) {
+        if (err) {
+            throw err;
+        }
+        else {
+            var lines = response.trim().split("\n");
+            // loop over every line
+            lines.forEach(function (line) {
+                if (line.trim() != '' && line.includes(':')) {
+                    var lineData = [];
+                    try {
+                        lineData = line.split(': ');
+                        var label = lineData[0].toLowerCase().trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                        var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                        output[label] = value;
+                    } catch (error) {
+                        logger.error(error);
+                        logger.error(line);
+                    }
+                }
+            });
+        }
+    });
+    return output;
+}
+
 function query(ip, port, callback) {
     const client = new net.Socket();
     let status = '';
@@ -89,36 +117,10 @@ router.get("/status", (req, res) => {
 
 router.get("/apcaccess", (req, res) => {
 
-    var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
+    //var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");
-        executeCmd('apcaccess', function (err, response) {
-            var output = {};
-            if (err) {
-                throw err;
-            }
-            else {
-                var lines = response.trim().split("\n");
-                // loop over every line
-                lines.forEach(function (line) {
-                    if (line.trim() != '' && line.includes(':')) {
-                        var lineData = [];
-                        try {
-                            lineData = line.split(': ');
-                            var label = lineData[0].toLowerCase().trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                            var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
-                            output[label] = value;
-                        } catch (error) {
-                            logger.error(error);
-                            logger.error(line);
-                        }
-
-                    }
-
-                });
-                res.status(200).json(output);
-            }
-        })
+        res.status(200).json(output);
     } catch (error) {
         logger.error(error);
         res.status(500).json(error);
