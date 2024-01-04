@@ -9,6 +9,7 @@ async function callHubitat(data) {
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
     logger.info(`callHubitat url - ${url}`);
+    logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
     const response = await axios({
         method: 'post',
