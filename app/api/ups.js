@@ -123,7 +123,7 @@ router.get("/apcaccess", (req, res) => {
     //var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");
-        res.status(200).json(apcaccess());
+        res.status(200).json(JSON.stringify(apcaccess()));
     } catch (error) {
         logger.error(error);
         res.status(500).json(error);
