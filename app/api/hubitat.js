@@ -11,17 +11,17 @@ async function callHubitat(data) {
     logger.info(`callHubitat url - ${url}`);
     logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
-    const response = await axios({
-        method: 'post',
-        url: url,
-        data: data,
-        headers: {
-            'Content-Type': 'text/json',
-            'Content-Length': JSON.stringify(data).length,
-            'Referer': 'apcupsd'
-        },
-        //port: process.env.HUB_PORT
-    });
+        const response = await axios({
+            method: 'post',
+            url: url,
+            data: data,
+            headers: {
+                'Content-Type': 'text/json',
+                'Content-Length': JSON.stringify(data).length,
+                'Referer': 'apcupsd'
+            },
+            //port: process.env.HUB_PORT
+        });
     } catch (error) {
         logger.error(`callHubitat - ${error}`);
         throw error;
@@ -33,20 +33,18 @@ router.get("/", async (req, res) => {
     var data;
     var event;
     try {
-        if (req.params.event === '') { 
-            event = {event : req.params.event};
+        if (req.params.event === '') {
+            event = { event: req.params.event };
         }
         query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
             if (err) {
                 throw err;
             }
             else {
-                data = { ...response, 
-                        ...event
-                };
+                data = response;
             }
         });
-        const postresponse = await callHubitat(data);
+        const postresponse = await callHubitat({ ...event, ...data });
         res.status(200).json(postresponse);
     } catch (error) {
         logger.error(error);
