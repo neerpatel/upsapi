@@ -24,7 +24,7 @@ app.use((req, res, next) => {
       method: req.method,
       url: req.url,
       statusCode: res.statusCode,
-      req: req,
+      //req: req,
       responseTime: Date.now() - req.startTime,
     }));
     next();
