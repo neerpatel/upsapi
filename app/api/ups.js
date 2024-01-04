@@ -50,7 +50,7 @@ function query(ip, port, callback) {
                     // assign values
                     lineData = line.split(': ');
 
-                    var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                    var label = lineData[0].toLowerCase().trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                     var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
 
                     response[label] = value;
