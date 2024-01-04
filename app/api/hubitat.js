@@ -36,7 +36,6 @@ router.get("/", async (req, res) => {
             event = {event : req.params.event};
         }
         query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
-            res.header("Referer", "apcupsd");
             if (err) {
                 throw err;
             }
