@@ -36,6 +36,7 @@ router.get("/", async (req, res) => {
         if (req.params.event === '') {
             event = { event: req.params.event };
         }
+        logger.info(`hubitat get event- ${JSON.stringify(event)}`);
         query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
             if (err) {
                 throw err;
@@ -44,6 +45,7 @@ router.get("/", async (req, res) => {
                 data = response;
             }
         });
+        logger.info(`hubitat get data- ${JSON.stringify(data)}`);
         const postresponse = await callHubitat({ ...event, ...data });
         res.status(200).json(postresponse);
     } catch (error) {
