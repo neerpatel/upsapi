@@ -3,13 +3,13 @@ const logger = require("../config/winston");
 const { apcaccess } = require("./ups");
 const router = express.Router();
 const axios = require('axios');
+const { log } = require("winston");
 
 function callHubitat(data, callback) {
     var response = {};
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
-    logger.info(`callHubitat url - ${url}`);
     logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
         response = axios({
@@ -35,8 +35,9 @@ router.get("/", (req, res) => {
     var data;
     var event;
     try {
+        logger.info(`hubitat get - ${JSON.stringify(req.params)}`);
         if (req.params.event === '') {
-            event = { event: req.params.event };
+            event['event'] = req.params.event;
         }
         logger.info(`hubitat get event- ${JSON.stringify(event)}`);
         apcaccess((err, response) => {
