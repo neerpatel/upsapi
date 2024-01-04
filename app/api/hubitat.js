@@ -37,10 +37,17 @@ router.get("/", (req, res) => {
             event = { event: req.params.event };
         }
         logger.info(`hubitat get event- ${JSON.stringify(event)}`);
-        data = apcaccess();
-        logger.info(`hubitat get data- ${JSON.stringify(data)}`);
-        const postresponse = callHubitat({ ...event, ...data });
-        res.status(200).json(postresponse);
+        apcaccess(function (err, response) {
+            if (err) {
+                logger.error(err);
+                res.status(500).json(err);
+            }
+            else {
+                logger.info(`hubitat get data- ${JSON.stringify(response)}`);
+                const postresponse = callHubitat({ ...event, ...response });        
+                res.status(200).json(postresponse);
+            }
+        });
     } catch (error) {
         logger.error(error);
         res.status(500).send("Error calling Hubitat");

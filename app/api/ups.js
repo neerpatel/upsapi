@@ -24,12 +24,12 @@ function executeCmd(cmd, callback) {
     });
 }
 
-function apcaccess() {
+function apcaccess(callback) {
     var output = {};
     executeCmd('apcaccess', function (err, response) {
         if (err) {
             logger.error("apcaccess : " + err);
-            throw err;
+            callback(err, null);
         }
         else {
             var lines = response.trim().split("\n");
@@ -49,7 +49,7 @@ function apcaccess() {
                 }
             });
             logger.info("apcaccess : " + JSON.stringify(output));
-            return output;
+            callback(null, output);
         }
     });
     
@@ -123,7 +123,15 @@ router.get("/apcaccess", (req, res) => {
     //var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");
-        res.status(200).json(JSON.stringify(apcaccess()));
+        apcaccess(function (err, response) {
+            if (err) {
+                logger.error(err);
+                res.status(500).json(err);
+            }
+            else {
+                res.status(200).json(response);
+            }
+        });
     } catch (error) {
         logger.error(error);
         res.status(500).json(error);
