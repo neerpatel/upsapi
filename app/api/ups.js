@@ -88,7 +88,7 @@ router.get("/status", (req, res) => {
 });
 
 router.get("/apcaccess", (req, res) => {
-    
+
     var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");
@@ -105,7 +105,7 @@ router.get("/apcaccess", (req, res) => {
                         var lineData = [];
                         try {
                             lineData = line.split(': ');
-                            var label = lineData[0].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
+                            var label = lineData[0].toLowerCase().trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                             var value = lineData[1].trim().replace(/[^a-zA-Z0-9 \.\-:]/g, "");
                             output[label] = value;
                         } catch (error) {
