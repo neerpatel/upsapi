@@ -68,7 +68,7 @@ function query(ip, port, callback) {
     });
 
     client.on('end', function () {
-        const response = {};
+        var response = {};
 
         const lines = status.trim().split("\n");
         // loop over every line

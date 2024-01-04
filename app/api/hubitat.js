@@ -5,7 +5,7 @@ const router = express.Router();
 const axios = require('axios');
 
 function callHubitat(data, callback) {
-    const response = {};
+    var response = {};
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
@@ -39,7 +39,7 @@ router.get("/", (req, res) => {
             event = { event: req.params.event };
         }
         logger.info(`hubitat get event- ${JSON.stringify(event)}`);
-        apcaccess(function (err, response) {
+        apcaccess((err, response) => {
             if (err) {
                 logger.error(err);
                 res.status(500).json(err);
@@ -54,9 +54,7 @@ router.get("/", (req, res) => {
                     else {
                         res.status(200).json(response);
                     }
-
-                });       
-                
+                });
             }
         });
     } catch (error) {
