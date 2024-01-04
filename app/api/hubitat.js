@@ -7,22 +7,19 @@ const axios = require('axios');
 async function callHubitat(data) {
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
-    const url = `http://${HUB_IP}/notify`;
-
-    const postData = {
-        data: data
-    };
+    const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
+    logger.info(`callHubitat url - ${url}`);
     try {
     const response = await axios({
         method: 'post',
         url: url,
-        data: postData,
+        data: data,
         headers: {
             'Content-Type': 'text/json',
-            'Content-Length': JSON.stringify(postData).length,
+            'Content-Length': JSON.stringify(data).length,
             'Referer': 'apcupsd'
         },
-        port: process.env.HUB_PORT
+        //port: process.env.HUB_PORT
     });
     } catch (error) {
         logger.error(`callHubitat - ${error}`);
