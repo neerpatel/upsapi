@@ -10,14 +10,14 @@ const bodyParser = require("body-parser");
 
 // App
 const app = express();
-/*
+
 app.use(
     bodyParser.urlencoded({
         extended: false,
     })
-);*/
+);
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     logger.info(JSON.stringify({
