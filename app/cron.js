@@ -4,7 +4,7 @@ const axios = require('axios');
 
 // pm2 instance name
 const processName = process.env.name || 'cron';
-
+logger.info('cron: Starting cron process.'); 
 // Only schedule cron job if it´s the primary pm2 instance
 if(processName === 'cron'){
     // schedule cron job
@@ -20,3 +20,7 @@ if(processName === 'cron'){
         logger.info(`cron: ${response.status} - ${response.statusText}`);
     });
 }
+
+process.on('SIGINT', () => {  // was SIGTERM
+    logger.info('cron: Closing cron process.');
+});
