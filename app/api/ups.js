@@ -120,7 +120,7 @@ router.get("/apcaccess", (req, res) => {
     //var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");
-        res.status(200).json(output);
+        res.status(200).json(apcaccess());
     } catch (error) {
         logger.error(error);
         res.status(500).json(error);
@@ -128,4 +128,4 @@ router.get("/apcaccess", (req, res) => {
 
 });
 
-module.exports = { router, query };
+module.exports = { router, query, apcaccess};
