@@ -48,7 +48,7 @@ function apcaccess() {
                     }
                 }
             });
-            logger.info("apcaccess : " + output);
+            logger.info("apcaccess : " + JSON.stringify(output));
             return output;
         }
     });
