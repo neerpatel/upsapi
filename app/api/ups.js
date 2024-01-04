@@ -105,6 +105,7 @@ function query(ip, port, callback) {
 
 const exec = require('child_process').exec;
 router.get("/status", (req, res) => {
+    logger.info(`/ups/status: was called by ${req.ip}`);
     query(process.env.APCNIS_IP, process.env.APCNIS_PORT, function (err, response) {
         res.header("Referer", "apcupsd");
         if (err) {
@@ -118,7 +119,7 @@ router.get("/status", (req, res) => {
 });
 
 router.get("/apcaccess", (req, res) => {
-
+    logger.info(`/ups/apcaccess: was called by ${req.ip}`);
     //var wanted = ['date', 'upsname', 'serialno', 'status', 'linev', 'linefreq', 'loadpct', 'battv', 'bcharge', 'model', 'timeleft'];
     try {
         res.header("Referer", "apcupsd");

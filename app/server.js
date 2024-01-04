@@ -35,8 +35,8 @@ app.use("/hubitat", hubitat);
 const port = process.env.PORT || 8070;
 app.listen(port, () => logger.info(`Server running on port ${port}`));
 
-process.on('SIGTERM', () => {
-    logger.info('SIGTERM signal received.');
+process.on('SIGINT', () => {  // was SIGTERM
+    logger.info('SIGINT signal received.'); 
     logger.info('Closing http server.');
     server.close((err) => {
         logger.info('Http server closed.');

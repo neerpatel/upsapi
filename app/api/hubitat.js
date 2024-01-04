@@ -10,7 +10,6 @@ function callHubitat(data, callback) {
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
-    logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
         response = axios({
             method: 'post',
@@ -34,8 +33,8 @@ function callHubitat(data, callback) {
 router.get("/", (req, res) => {
     var data;
     var event = {};
+    logger.info(`/hubitat: was called by ${req.ip}`);
     try {
-        logger.info(`hubitat get - ${JSON.stringify(req.query['event'])}`);
         if ('event' in req.query) {
             event['event'] = req.query['event'];
         }

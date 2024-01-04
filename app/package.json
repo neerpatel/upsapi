@@ -6,13 +6,14 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js && node cron.js"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
     "axios": "^1.6.3",
     "body-parser": "^1.20.2",
     "express": "^4.16.1",
+    "node-cron": "^3.0.3",
     "winston": "^3.11.0"
   }
 }
