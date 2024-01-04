@@ -4,14 +4,15 @@ const { apcaccess } = require("./ups");
 const router = express.Router();
 const axios = require('axios');
 
-function callHubitat(data) {
+function callHubitat(data, callback) {
+    const response = {};
     const HUB_IP = process.env.HUB_IP; // assuming HUB_IP is an environment variable
 
     const url = `http://${HUB_IP}:${process.env.HUB_PORT}/notify`;
     logger.info(`callHubitat url - ${url}`);
     logger.info(`callHubitat data - ${JSON.stringify(data)}`);
     try {
-        const response = axios({
+        response = axios({
             method: 'post',
             url: url,
             data: data,
@@ -22,11 +23,12 @@ function callHubitat(data) {
             },
             //port: process.env.HUB_PORT
         });
+        callback(null, response);
     } catch (error) {
         logger.error(`callHubitat - ${error}`);
-        throw error;
+        callback(error);
     }
-    return response.data;
+    //return response.data;
 }
 
 router.get("/", (req, res) => {
@@ -44,8 +46,17 @@ router.get("/", (req, res) => {
             }
             else {
                 logger.info(`hubitat get data- ${JSON.stringify(response)}`);
-                const postresponse = callHubitat({ ...event, ...response });        
-                res.status(200).json(postresponse);
+                callHubitat({ ...event, ...response }, (err, response) => {
+                    if (err) {
+                        logger.error(err);
+                        res.status(500).json(err);
+                    }
+                    else {
+                        res.status(200).json(response);
+                    }
+
+                });       
+                
             }
         });
     } catch (error) {
