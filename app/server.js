@@ -38,7 +38,7 @@ app.listen(port, () => logger.info(`Server running on port ${port}`));
 process.on('SIGINT', () => {  // was SIGTERM
     logger.info('SIGINT signal received.'); 
     logger.info('Closing http server.');
-    server.close((err) => {
+    app.close((err) => {
         logger.info('Http server closed.');
         process.exit(err ? 1 : 0);
     });
