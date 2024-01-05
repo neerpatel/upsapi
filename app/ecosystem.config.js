@@ -42,12 +42,14 @@ module.exports = {
   deploy: {
     production: {
       user: 'pi',
-      host: '127.0.0.1',
+      host: ['127.0.0.1', '192.168.107.34'],
       ref: 'origin/main',
-      repo: 'https://github.com/neerpatel/upsapi',
+      repo: 'git@github.com:neerpatel/upsapi.git',
       path: '/opt/upsapi',
       'pre-deploy-local': '',
-      'post-deploy': 'cd ./app && npm install && pm2 reload ecosystem.config.js --env production',
+      'pre-setup' : 'curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/setup.sh | sudo -E bash -',
+      'post-setup': "ls -la",
+      'post-deploy': 'cd ./app && npm install',
     }
   }
 };

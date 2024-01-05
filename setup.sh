@@ -2,8 +2,8 @@
 
 NODE_MAJOR=18
 
-sudo apt update
-sudo apt upgrade
+sudo apt update -y
+sudo apt upgrade -y
 # Check if Node.js is installed
 if node -v > /dev/null 2>&1; then
     echo "Node.js is already installed"
