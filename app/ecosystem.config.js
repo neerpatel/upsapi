@@ -42,7 +42,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'pi',
-      host: ['127.0.0.1', '192.168.107.34'],
+      host: ['127.0.0.1'],
       ref: 'origin/main',
       repo: 'git@github.com:neerpatel/upsapi.git',
       path: '/opt/upsapi',
