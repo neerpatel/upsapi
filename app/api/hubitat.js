@@ -36,7 +36,15 @@ router.get("/", (req, res) => {
     try {
         if ('event' in req.query) {
             event['event'] = req.query['event'];
-            logger.info(`/hubitat: was called by ${req.ip} event = ${event['event']}`);
+            
+            
+            if (event['msg'] in req.query) {
+                event['msg'] = req.query['msg'];
+                logger.info(`/hubitat: message ${req.ip} event = ${event['event']} - msg = ${event['msg']}`);
+            } else {
+                logger.info(`/hubitat: was called by ${req.ip} event = ${event['event']}`);
+            }
+            
         } else { 
             logger.info(`/hubitat: was called by ${req.ip}`);
         }
