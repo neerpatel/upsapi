@@ -49,7 +49,7 @@ module.exports = {
       'pre-deploy-local': '',
       'pre-setup' : 'curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/setup.sh | sudo -E bash -',
       'post-setup': "ls -la",
-      'post-deploy': 'sh ./post-deploy.sh',
+      'post-deploy': 'sh ../post-deploy.sh',
     }
   }
 };
