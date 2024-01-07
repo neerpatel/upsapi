@@ -1,4 +1,4 @@
-if [ ! -f .env ] then
+if [ ! -f .env ]; then
   export $(cat .env | xargs)
 fi
 sudo cp -rf ./apcupsd-scripts/* /etc/apcupsd
