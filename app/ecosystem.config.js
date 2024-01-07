@@ -47,7 +47,7 @@ module.exports = {
       repo: 'git@github.com:neerpatel/upsapi.git',
       path: '/opt/upsapi',
       'pre-deploy-local': '',
-      'pre-setup' : 'curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/setup.sh | sudo -E bash -',
+      //'pre-setup' : 'curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/setup.sh | sudo -E bash -',
       'post-setup': "ls -la",
       'post-deploy': 'pwd && sh ./post-deploy.sh',
     }
