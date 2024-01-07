@@ -21,7 +21,7 @@ curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/setup.sh | sudo
 ```
 Then setup / deploy the application
 ```bash
-curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/app/ecosystem.config.js | pm2 deploy production setup && pm2 deploy production
+curl -sL https://raw.githubusercontent.com/neerpatel/upsapi/main/app/ecosystem.config.js -O && pm2 deploy production setup && pm2 deploy production
 ```
 
 
