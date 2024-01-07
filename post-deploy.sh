@@ -1,9 +1,11 @@
 if [ ! -f .env ]; then
   export $(cat .env | xargs)
 fi
-sudo cp -rf ./apcupsd-scripts/* /etc/apcupsd
 
-sudo sed -E 's/__(([^_]|_[^_])*)__/${\1}/g' /etc/apcupsd/apcupsd.conf |envsubst > /etc/apcupsd/apcupsd.conf
+sed -E 's/__(([^_]|_[^_])*)__/${\1}/g' ./apcupsd-scripts/apcupsd.conf |envsubst > ./apcupsd-scripts/apcupsd.conf
+sudo cp -rf ./apcupsd-scripts/* /etc/apcupsd
+git restore ./apcupsd-scripts/apcupsd.conf
+
 sudo /etc/init.d/apcupsd start
 
 cd ./app && npm install
