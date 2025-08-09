@@ -111,6 +111,27 @@ def reset()
 	initialize()
 }
 
+// Helpers to safely parse numbers from strings like "123 Units"
+private Float safeFloat(val, String suffix) {
+	try {
+		def s = val ? val.toString().replace(suffix, '').trim() : null
+		return s ? s.toFloat() : 0f
+	} catch (e) {
+		if (enableDebug) log.debug "safeFloat error parsing '${val}' with suffix '${suffix}': ${e}"
+		return 0f
+	}
+}
+
+private Integer safeMinutes(val) {
+	try {
+		def s = val ? val.toString().replace(' Minutes', '').trim() : null
+		return s ? Math.round(s.toFloat()) : 0
+	} catch (e) {
+		if (enableDebug) log.debug "safeMinutes error parsing '${val}': ${e}"
+		return 0
+	}
+}
+
 
 def refresh()
 {
@@ -205,25 +226,26 @@ def updateDeviceStatus(data)
     log.info "UPS ${data.upsname} pushed an update"
     if (enableDebug) log.debug data
 	def power = 0
-	def timeLeft = Math.round(Float.parseFloat(data.timeleft.replace(" Minutes", "")))
-	def battery = Math.round(Float.parseFloat(data.bcharge.replace(" Percent", "")))
-	def voltage = Float.parseFloat(data.linev.replace(" Volts", ""))
-	def batteryVoltage = Float.parseFloat(data.battv.replace(" Volts", ""))
-	def lowTransVolts = Float.parseFloat(data.lotrans.replace(" Volts", ""))
-	def highTransVolts = Float.parseFloat(data.hitrans.replace(" Volts", ""))
-	def loadPercent = Float.parseFloat(data.loadpct.replace(" Percent", ""))
-    def nomPower = Float.parseFloat(data.nompower.replace(" Watts", ""))
+	def timeLeft = safeMinutes(data?.timeleft)
+	def battery = Math.round(safeFloat(data?.bcharge, " Percent"))
+	def voltage = safeFloat(data?.linev, " Volts")
+	def batteryVoltage = safeFloat(data?.battv, " Volts")
+	def lowTransVolts = safeFloat(data?.lotrans, " Volts")
+	def highTransVolts = safeFloat(data?.hitrans, " Volts")
+	def loadPercent = safeFloat(data?.loadpct, " Percent")
+	def nomPower = safeFloat(data?.nompower, " Watts")
 	def powerSource =
-    	data.status == "ONLINE" ? "mains" : 
-        	data.status == "ONBATT" ? "battery" : 
-            	"mains"
+		data?.status == "ONLINE" ? "mains" : 
+			data?.status == "ONBATT" ? "battery" : 
+				"mains"
 
 	// Calculate wattage as a percentage of nominal load
-    power = ((loadPercent / 100) * nomPower)
+	power = ((loadPercent / 100) * nomPower)
     
 	sendEvent(name: "powerSource", value: powerSource, displayed: this.currentPowerSource != powerSource ? true : false)
 	sendEvent(name: "timeRemaining", value: timeLeft, displayed: false)  
-	sendEvent(name: "upsStatus", value: data.status.toLowerCase(), displayed: this.currentUpsStatus != data.status ? true : false)
+	def statusLower = data?.status ? data.status.toLowerCase() : ""
+	sendEvent(name: "upsStatus", value: statusLower, displayed: this.currentUpsStatus != data.status ? true : false)
     sendEvent(name: "upsname", value: data.upsname, displayed: this.currentUpsname != data.upsname ? true : false)
 	sendEvent(name: "model", value: data.model, displayed: this.currentModel != data.model ? true : false)
 	sendEvent(name: "serial", value: data.serialno, displayed: this.currentSerial != data.serialno ? true : false)
