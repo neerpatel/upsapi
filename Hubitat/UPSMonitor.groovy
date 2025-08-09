@@ -17,7 +17,6 @@
  *
  *
  */
-b
 
 import groovy.json.JsonSlurper
 metadata
@@ -57,6 +56,7 @@ metadata
 		attribute "lastPowerRestore", "string"
 		attribute "lastPowerFailReason", "string"
 		attribute "batteryRuntime", "string"
+	attribute "sessionStatus", "string"
         attribute "msg", "string"
         
 		command "refresh"
@@ -161,12 +161,13 @@ def parse(String description)
         if (enableDebug) log.debug "json : " + json
 		// Response to an event notification
 
-        if (json?.event && (json?.event != "" || json?.event != "cron"))
+		if (json?.event && json?.event != "" && json?.event != "cron")
 		{
 			log.info "Push notification for UPS event [${json?.event}] detected."
 			
 			// Update the child device if it's monitored
-			updatePowerStatus(json.event)
+			def msgText = json?.msg
+			updatePowerStatus(json.event, msgText)
 		}
 		// Response to a getUPSstatus call
 		else if (json)
@@ -179,7 +180,7 @@ def parse(String description)
 }
 
 
-def updatePowerStatus(status)
+def updatePowerStatus(status, msgText = null)
 {
 	def powerSource =
 		status == "mainsback" ? "mains" : 
@@ -193,7 +194,9 @@ def updatePowerStatus(status)
     if (powerSource == "mains") sendEvent(name: "sessionStatus", value: "stopped", displayed: this.currentSessionStatus != sessionStatus ? true : false)
     else if (powerSource == "battery") sendEvent(name: "sessionStatus", value: "running", displayed: this.currentSessionStatus != sessionStatus ? true : false)
 
-    sendEvent(name: "msg", value: data.msg, displayed: this.currentmsg != status ? true : false)
+	if (msgText) {
+		sendEvent(name: "msg", value: msgText, displayed: this.currentmsg != status ? true : false)
+	}
 }
 
 
