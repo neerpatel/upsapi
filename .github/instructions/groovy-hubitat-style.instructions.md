@@ -1,6 +1,6 @@
 ---
 description: "Groovy & Hubitat Coding Style Guide"
-applyTo: "**"
+applyTo: "*.groovy"
 ---
 
 # Groovy & Hubitat Coding Style Guide

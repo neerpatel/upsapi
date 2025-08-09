@@ -2,7 +2,7 @@
  *  
  *  UPSMon - UPS Monitoring Driver
  *
- *   Copyright 2024 Neer Patel (modified from the original version)
+ *  Copyright 2024 Neer Patel (modified from the original version)
  *  Copyright 2016 Steve White (https://github.com/shackrat/Hubitat/blob/master/UPS%20Monitor/UPSMonitor.groovy)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -22,7 +22,13 @@ b
 import groovy.json.JsonSlurper
 metadata
 {
-    definition (name: "UPSMon - UPS Monitoring Driver", namespace: "neerpatel", author: "Neer Patel")
+    definition (
+        name: "UPS Mon - UPS Monitoring Driver", 
+        namespace: "neerpatel", 
+        author: "Neer Patel",
+        importUrl:"https://raw.githubusercontent.com/neerpatel/upsapi/main/Hubitat/UPSMonitor.groovy",
+        singleThreaded: false
+    )
     {
         capability "Battery"
 		capability "Voltage Measurement"
@@ -33,6 +39,7 @@ metadata
 
 		
 		attribute "loadPercent", "string"
+        attribute "upsname", "string"
         attribute "model", "string"
 		attribute "serial", "string"
 		attribute "upsStatus", "string"
@@ -59,7 +66,8 @@ metadata
 	{	
 		section("Device")
 		{
-			input("ip", "string", title:"IP Address", description: "IP Address of the Raspberry Pi", defaultValue: "192.168.0.101:8070" ,required: true, displayDuringSetup: true)		
+			input("ip", "string", title:"IP Address", description: "IP Address of the Raspberry Pi", defaultValue: "192.168.X.X" ,required: true, displayDuringSetup: true)	
+            input("port", "number", title:"Port Number", defaultValue: 8070, range: 1..65535, required: true)
 		}
 		section
 		{
@@ -107,9 +115,10 @@ def reset()
 def refresh()
 {
     
-    def host =  ip + ":8070"
+    def host =  ip + ":" + port
     log.info "refresh: ${host}"
 	// Initiate local LAN request
+
 	def hubAction = new hubitat.device.HubAction(
 			method: "GET",
 			path: "/ups/apcaccess",
@@ -120,8 +129,12 @@ def refresh()
 				],
 			body: query
 		)
+    
+    
     if (enableDebug) log.debug "Requesting update from APC service on ${host}/ups/apcaccess"
-	sendHubCommand(hubAction)
+    
+    sendHubCommand(hubAction)
+    
 }
 
 
@@ -146,10 +159,9 @@ def parse(String description)
 		def sluper = new JsonSlurper();
 		def json = sluper.parseText(body)
         if (enableDebug) log.debug "json : " + json
-        if (enableDebug) log.debug "json status: " + json.status
 		// Response to an event notification
 
-        if (json?.event && json?.event != "cron")
+        if (json?.event && (json?.event != "" || json?.event != "cron"))
 		{
 			log.info "Push notification for UPS event [${json?.event}] detected."
 			
@@ -187,7 +199,7 @@ def updatePowerStatus(status)
 
 def updateDeviceStatus(data)
 {
-    log.info "UPS ${json?.upsname} pushed an update"
+    log.info "UPS ${data.upsname} pushed an update"
     if (enableDebug) log.debug data
 	def power = 0
 	def timeLeft = Math.round(Float.parseFloat(data.timeleft.replace(" Minutes", "")))
@@ -209,9 +221,10 @@ def updateDeviceStatus(data)
 	sendEvent(name: "powerSource", value: powerSource, displayed: this.currentPowerSource != powerSource ? true : false)
 	sendEvent(name: "timeRemaining", value: timeLeft, displayed: false)  
 	sendEvent(name: "upsStatus", value: data.status.toLowerCase(), displayed: this.currentUpsStatus != data.status ? true : false)
+    sendEvent(name: "upsname", value: data.upsname, displayed: this.currentUpsname != data.upsname ? true : false)
 	sendEvent(name: "model", value: data.model, displayed: this.currentModel != data.model ? true : false)
 	sendEvent(name: "serial", value: data.serialno, displayed: this.currentSerial != data.serialno ? true : false)
-	sendEvent(name: "battery", value: battery, displayed: this.currentBattery != battery ? true : false)
+	sendEvent(name: "battery", value: battery, displayed: true)
 	sendEvent(name: "batteryRuntime", value: data.timeleft, displayed: this.currentRunTimeRemain != data.timeleft ? true : false)
 	sendEvent(name: "batteryVoltage", value: batteryVoltage, displayed: this.currentBatteryVoltage != batteryVoltage ? true : false)
 	sendEvent(name: "voltage", value: voltage, descriptionText: "Line voltage is ${voltage} volts.", displayed: this.currentVoltage != voltage ? true : false)
@@ -228,7 +241,7 @@ def updateDeviceStatus(data)
 	sendEvent(name: "lastPowerFail", value: data.xonbatt, displayed: this.currentNomPower != data.xonbatt ? true : false)
 	sendEvent(name: "lastPowerRestore", value: data.xoffbatt, displayed: this.currentPower != data.xoffbatt ? true : false)
 	sendEvent(name: "lastPowerFailReason", value: data.lastxfer, displayed: this.currentLastPowerFailReason != data.lastxfer ? true : false)
-    sendEvent(name: "msg", value: data.msg, displayed: this.currentmsg != status ? true : false)
+    sendEvent(name: "msg", value: data.msg, displayed: true)
 }
 
 
